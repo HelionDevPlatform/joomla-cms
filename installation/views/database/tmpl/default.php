@@ -5,6 +5,18 @@
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+// BEGIN Stackato VCAP Services
+$services = getenv("VCAP_SERVICES");
+$appinfo = getenv("VCAP_APPLICATION");
+$services_json = json_decode($services,true);
+$appinfo_json = json_decode($appinfo,true);
+$mysql_config = $services_json["mysql-5.1"][0]["credentials"];
+if (array_key_exists("users", $appinfo_json))
+  $admin = $appinfo_json["users"][0];
+else
+  $admin = $appinfo_json["group"];
+// END Stackato VCAP Services
+
 defined('_JEXEC') or die;
 ?>
 <div id="step">
@@ -45,9 +57,7 @@ defined('_JEXEC') or die;
 									<?php echo $this->form->getInput('db_type'); ?>
 								</td>
 								<td>
-									<em>
-									<?php echo JText::_('INSTL_DATABASE_TYPE_DESC'); ?>
-									</em>
+									For Stackato, use: <b>Mysql</b>
 								</td>
 							</tr>
 							<tr>
@@ -57,9 +67,7 @@ defined('_JEXEC') or die;
 									<?php echo $this->form->getInput('db_host'); ?>
 								</td>
 								<td>
-									<em>
-									<?php echo JText::_('INSTL_DATABASE_HOST_DESC'); ?>
-									</em>
+									For Stackato, use: <b><?php echo $mysql_config["hostname"]; ?></b>
 								</td>
 							</tr>
 							<tr>
@@ -69,9 +77,7 @@ defined('_JEXEC') or die;
 									<?php echo $this->form->getInput('db_user'); ?>
 								</td>
 								<td>
-									<em>
-									<?php echo JText::_('INSTL_DATABASE_USER_DESC'); ?>
-									</em>
+									For Stackato, use: <b><?php echo $mysql_config["user"]; ?></b>
 								</td>
 							</tr>
 							<tr>
@@ -81,9 +87,7 @@ defined('_JEXEC') or die;
 									<?php echo $this->form->getInput('db_pass'); ?>
 								</td>
 								<td>
-									<em>
-									<?php echo JText::_('INSTL_DATABASE_PASSWORD_DESC'); ?>
-									</em>
+									For Stackato, use: <b><?php echo $mysql_config["password"]; ?></b>
 								</td>
 							</tr>
 							<tr>
@@ -93,9 +97,7 @@ defined('_JEXEC') or die;
 									<?php echo $this->form->getInput('db_name'); ?>
 								</td>
 								<td>
-									<em>
-									<?php echo JText::_('INSTL_DATABASE_NAME_DESC'); ?>
-									</em>
+									For Stackato, use: <b><?php echo $mysql_config["name"]; ?></b>
 								</td>
 							</tr>
 							<tr>
