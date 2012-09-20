@@ -7,15 +7,8 @@
 
 // BEGIN Stackato VCAP Services
 $services = getenv("VCAP_SERVICES");
-$appinfo = getenv("VCAP_APPLICATION");
 $services_json = json_decode($services,true);
-$appinfo_json = json_decode($appinfo,true);
-$mysql_config = $services_json["mysql-5.1"][0]["credentials"];
-if (array_key_exists("users", $appinfo_json))
-  $admin = $appinfo_json["users"][0];
-else
-  $admin = $appinfo_json["group"];
-// END Stackato VCAP Services
+$mysql_config = $services_json["mysql"][0]["credentials"];
 
 defined('_JEXEC') or die;
 ?>
