@@ -4,4 +4,11 @@ framework:
   type: php
 mem: 128
 services:
-  mysql-joomla: mysql
+  ${name}-fs: filesystem
+  ${name}-db: mysql
+hooks:
+  post-staging:
+    - mkdir -p "$STACKATO_FILESYSTEM"/images
+    - cp -r images/* "$STACKATO_FILESYSTEM"/images
+    - rm -rf images
+    - ln -s "$STACKATO_FILESYSTEM"/images images
