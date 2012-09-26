@@ -8,6 +8,9 @@ services:
   ${name}-db: mysql
 hooks:
   post-staging:
+    # setting up configuration.php in filesystem
+    - sh stackato-setup.sh
+
     - mkdir -p "$STACKATO_FILESYSTEM"/images
     - cp -r images/* "$STACKATO_FILESYSTEM"/images
     - rm -rf images
