@@ -1,6 +1,6 @@
 #!/bin/bash
 #echo "This scripts does Stackato setup related to filesystem."
-if [ -e "$STACKATO_FILESYSTEM"/configuration.php ]
+if [ -s "$STACKATO_FILESYSTEM"/configuration.php ]
   then
     echo "Configuration file exists. Removing installation folder..."
     rm -rf installation/
