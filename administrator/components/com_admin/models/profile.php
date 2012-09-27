@@ -1,10 +1,12 @@
 <?php
 /**
- * @copyright	Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * @package     Joomla.Administrator
+ * @subpackage  com_admin
+ *
+ * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-// No direct access.
 defined('_JEXEC') or die;
 
 require_once JPATH_ADMINISTRATOR.'/components/com_users/models/user.php';
@@ -12,9 +14,9 @@ require_once JPATH_ADMINISTRATOR.'/components/com_users/models/user.php';
 /**
  * User model.
  *
- * @package		Joomla.Administrator
- * @subpackage	com_admin
- * @since		1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_admin
+ * @since       1.6
  */
 class AdminModelProfile extends UsersModelUser
 {
@@ -28,13 +30,16 @@ class AdminModelProfile extends UsersModelUser
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		// Initialise variables.
-		$app = JFactory::getApplication();
-
 		// Get the form.
 		$form = $this->loadForm('com_admin.profile', 'profile', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
+		}
+		if (!JComponentHelper::getParams('com_users')->get('change_login_name'))
+		{
+			$form->setFieldAttribute('username', 'required', 'false');
+			$form->setFieldAttribute('username', 'readonly', 'true');
+			$form->setFieldAttribute('username', 'description', 'COM_ADMIN_USER_FIELD_NOCHANGE_USERNAME_DESC');
 		}
 
 		return $form;
@@ -57,7 +62,7 @@ class AdminModelProfile extends UsersModelUser
 
 		// TODO: Maybe this can go into the parent model somehow?
 		// Get the dispatcher and load the users plugins.
-		$dispatcher	= JDispatcher::getInstance();
+		$dispatcher	= JEventDispatcher::getInstance();
 		JPluginHelper::importPlugin('user');
 
 		// Trigger the data preparation event.
@@ -94,7 +99,6 @@ class AdminModelProfile extends UsersModelUser
 	 */
 	public function save($data)
 	{
-		// Initialise variables;
 		$user = JFactory::getUser();
 
 		unset($data['id']);

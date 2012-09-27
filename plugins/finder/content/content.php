@@ -9,9 +9,6 @@
 
 defined('JPATH_BASE') or die;
 
-jimport('joomla.application.component.helper');
-
-// Load the base adapter.
 require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapter.php';
 
 /**
@@ -314,7 +311,7 @@ class plgFinderContent extends FinderIndexerAdapter
 		FinderIndexerHelper::getContentExtras($item);
 
 		// Index the item.
-		FinderIndexer::index($item);
+		$this->indexer->index($item);
 	}
 
 	/**
@@ -345,7 +342,7 @@ class plgFinderContent extends FinderIndexerAdapter
 	{
 		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
-		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
+		$sql = $sql instanceof JDatabaseQuery ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.title, a.alias, a.introtext AS summary, a.fulltext AS body');
 		$sql->select('a.state, a.catid, a.created AS start_date, a.created_by');
 		$sql->select('a.created_by_alias, a.modified, a.modified_by, a.attribs AS params');
@@ -355,7 +352,7 @@ class plgFinderContent extends FinderIndexerAdapter
 
 		// Handle the alias CASE WHEN portion of the query
 		$case_when_item_alias = ' CASE WHEN ';
-		$case_when_item_alias .= $sql->charLength('a.alias');
+		$case_when_item_alias .= $sql->charLength('a.alias', '!=', '0');
 		$case_when_item_alias .= ' THEN ';
 		$a_id = $sql->castAsChar('a.id');
 		$case_when_item_alias .= $sql->concatenate(array($a_id, 'a.alias'), ':');
@@ -364,7 +361,7 @@ class plgFinderContent extends FinderIndexerAdapter
 		$sql->select($case_when_item_alias);
 
 		$case_when_category_alias = ' CASE WHEN ';
-		$case_when_category_alias .= $sql->charLength('c.alias');
+		$case_when_category_alias .= $sql->charLength('c.alias', '!=', '0');
 		$case_when_category_alias .= ' THEN ';
 		$c_id = $sql->castAsChar('c.id');
 		$case_when_category_alias .= $sql->concatenate(array($c_id, 'c.alias'), ':');

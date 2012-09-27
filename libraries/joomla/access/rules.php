@@ -217,15 +217,3 @@ class JAccessRules
 		return json_encode($temp);
 	}
 }
-
-/**
- * Deprecated class placeholder.  You should use JAccessRules instead.
- *
- * @package     Joomla.Platform
- * @subpackage  Access
- * @since       11.1
- * @deprecated  12.3
- */
-class JRules extends JAccessRules
-{
-}

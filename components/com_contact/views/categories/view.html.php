@@ -1,26 +1,29 @@
 <?php
 /**
- * @copyright	Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * @package     Joomla.Site
+ * @subpackage  com_contact
+ *
+ * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-// No direct access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.view');
 
 /**
  * Content categories view.
  *
- * @package		Joomla.Site
- * @subpackage	com_contact
- * @since 1.6
+ * @package     Joomla.Site
+ * @subpackage  com_contact
+ * @since       1.6
  */
-class ContactViewCategories extends JView
+class ContactViewCategories extends JViewLegacy
 {
 	protected $state = null;
+
 	protected $item = null;
+
 	protected $items = null;
+
 	protected $pagination = null;
 
 	/**
@@ -28,9 +31,8 @@ class ContactViewCategories extends JView
 	 *
 	 * @return	mixed	False on error, null otherwise.
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
-		// Initialise variables
 		$state		= $this->get('State');
 		$items		= $this->get('Items');
 		$parent		= $this->get('Parent');
@@ -57,10 +59,10 @@ class ContactViewCategories extends JView
 		//Escape strings for HTML output
 		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
 
-		$this->assign('maxLevelcat',	$params->get('maxLevelcat', -1));
-		$this->assignRef('params',		$params);
-		$this->assignRef('parent',		$parent);
-		$this->assignRef('items',		$items);
+		$this->maxLevelcat = $params->get('maxLevelcat', -1);
+		$this->params = &$params;
+		$this->parent = &$parent;
+		$this->items = &$items;
 
 		$this->_prepareDocument();
 
