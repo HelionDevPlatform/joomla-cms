@@ -15,3 +15,5 @@ hooks:
     - cp -r images/* "$STACKATO_FILESYSTEM"/images
     - rm -rf images
     - ln -s "$STACKATO_FILESYSTEM"/images images
+  pre-running:
+    - echo $VCAP_SERVICES | json mysql | json -a credentials
