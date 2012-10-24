@@ -39,9 +39,8 @@ defined('_JEXEC') or die;
 			<?php echo $this->form->getLabel('db_host'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('db_host'); ?>
+			<?php echo $this->form->getInput('db_host',null,$mysql_config["hostname"]); ?>
 			<p class="help-block">
-			For Stackato, use: <b><?php echo $mysql_config["hostname"]; ?></b>
 			</p>
 		</div>
 	</div>
@@ -50,9 +49,8 @@ defined('_JEXEC') or die;
 			<?php echo $this->form->getLabel('db_user'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('db_user'); ?>
+			<?php echo $this->form->getInput('db_user',null,$mysql_config["user"]); ?>
 			<p class="help-block">
-			For Stackato, use: <b><?php echo $mysql_config["user"]; ?></b>
 			</p>
 		</div>
 	</div>
@@ -61,9 +59,8 @@ defined('_JEXEC') or die;
 			<?php echo $this->form->getLabel('db_pass'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('db_pass'); ?>
+			<?php echo $this->form->getInput('db_pass',null,$mysql_config["password"]); ?>
 			<p class="help-block">
-			For Stackato, use: <b><?php echo $mysql_config["password"]; ?></b>
 			</p>
 		</div>
 	</div>
@@ -72,9 +69,8 @@ defined('_JEXEC') or die;
 			<?php echo $this->form->getLabel('db_name'); ?>
 		</div>
 		<div class="controls">
-			<?php echo $this->form->getInput('db_name'); ?>
+			<?php echo $this->form->getInput('db_name',null,$mysql_config["name"]); ?>
 			<p class="help-block">
-			For Stackato, use: <b><?php echo $mysql_config["name"]; ?></b>
 			</p>
 		</div>
 	</div>
