@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  Template.beez5
  *
- * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -25,7 +25,7 @@ $params = &$this->params;
 	<li class="row<?php echo $i % 2; ?>">
 
 		<h2>
-		<?php if ($params->get('link_titles')): ?>
+		<?php if ($params->get('link_titles')) : ?>
 			<a href="<?php echo JRoute::_(ContentHelperRoute::getArticleRoute($item->slug)); ?>">
 				<?php echo $this->escape($item->title); ?></a>
 		<?php else: ?>
@@ -80,12 +80,8 @@ $params = &$this->params;
 	<dd class="createdby">
 		<?php $author = $item->author; ?>
 		<?php $author = ($item->created_by_alias ? $item->created_by_alias : $author);?>
-
-			<?php if (!empty($item->contactid ) &&  $params->get('link_author') == true):?>
-				<?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY',
-					JHtml::_('link', JRoute::_('index.php?option=com_contact&view=contact&id=' . $item->contactid), $author)
-				); ?>
-
+			<?php if (!empty($item->contact_link ) &&  $params->get('link_author') == true):?>
+				<?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY', JHtml::_('link', $item->contact_link, $author)); ?>
 			<?php else :?>
 				<?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY', $author); ?>
 			<?php endif; ?>

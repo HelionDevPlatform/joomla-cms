@@ -3,23 +3,23 @@
  * @package     Joomla.Administrator
  * @subpackage  com_templates
  *
- * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.tooltip');
+
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 $user = JFactory::getUser();
-$canDo = TemplatesHelper::getActions();
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function(task)
 	{
-		if (task == 'style.cancel' || document.formvalidator.isValid(document.id('style-form'))) {
+		if (task == 'style.cancel' || document.formvalidator.isValid(document.id('style-form')))
+		{
 			Joomla.submitform(task, document.getElementById('style-form'));
 		}
 	}
@@ -75,7 +75,7 @@ $canDo = TemplatesHelper::getActions();
 	<?php echo JHtml::_('sliders.end'); ?>
 	</div>
 	<?php if ($user->authorise('core.edit', 'com_menu') && $this->item->client_id == 0):?>
-		<?php if ($canDo->get('core.edit.state')) : ?>
+		<?php if ($this->canDo->get('core.edit.state')) : ?>
 			<div class="width-60 fltlft">
 			<?php echo $this->loadTemplate('assignment'); ?>
 			</div>

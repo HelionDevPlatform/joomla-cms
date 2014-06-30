@@ -3,11 +3,11 @@
  * @package     Joomla.Libraries
  * @subpackage  Error
  *
- * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-defined('JPATH_BASE') or die;
+defined('JPATH_PLATFORM') or die;
 
 /**
  * Displays the custom error page when an uncaught exception occurs.
@@ -49,7 +49,11 @@ class JErrorPage
 			// Push the error object into the document
 			$document->setError($error);
 
-			ob_end_clean();
+			if (ob_get_contents())
+			{
+				ob_end_clean();
+			}
+
 			$document->setTitle(JText::_('Error') . ': ' . $error->getCode());
 			$data = $document->render(
 				false,
@@ -66,15 +70,15 @@ class JErrorPage
 			else
 			{
 				// Do not allow cache
-				JResponse::allowCache(false);
+				$app->allowCache(false);
 
-				JResponse::setBody($data);
-				echo JResponse::toString();
+				$app->setBody($data);
+				echo $app->toString();
 			}
 		}
 		catch (Exception $e)
 		{
-			exit('Error displaying the error page: ' . $e->getMessage());
+			exit('Error displaying the error page: ' . $e->getMessage() . ': ' . $error->getMessage());
 		}
 	}
 }

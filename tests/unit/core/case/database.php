@@ -2,14 +2,17 @@
 /**
  * @package    Joomla.Test
  *
- * @copyright  Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-require_once 'PHPUnit/Extensions/Database/TestCase.php';
-require_once 'PHPUnit/Extensions/Database/DataSet/XmlDataSet.php';
-require_once 'PHPUnit/Extensions/Database/DataSet/QueryDataSet.php';
-require_once 'PHPUnit/Extensions/Database/DataSet/MysqlXmlDataSet.php';
+if (!class_exists('PHPUnit_Extensions_Database_TestCase'))
+{
+	require_once 'PHPUnit/Extensions/Database/TestCase.php';
+	require_once 'PHPUnit/Extensions/Database/DataSet/XmlDataSet.php';
+	require_once 'PHPUnit/Extensions/Database/DataSet/QueryDataSet.php';
+	require_once 'PHPUnit/Extensions/Database/DataSet/MysqlXmlDataSet.php';
+}
 
 /**
  * Abstract test case class for database testing.
@@ -56,7 +59,7 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
 	/**
 	 * Receives the callback from JError and logs the required error information for the test.
 	 *
-	 * @param	JException	The JException object from JError
+	 * @param   JException  $error  The JException object from JError
 	 *
 	 * @return	bool	To not continue with JError processing
 	 *
@@ -193,6 +196,23 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
 	}
 
 	/**
+	 * Gets a mock CMS application object.
+	 *
+	 * @param   array  $options  A set of options to configure the mock.
+	 *
+	 * @return  JApplicationCms
+	 *
+	 * @since   3.2
+	 */
+	public function getMockCmsApp($options = array())
+	{
+		// Attempt to load the real class first.
+		class_exists('JApplicationCms');
+
+		return TestMockApplicationCms::create($this, $options);
+	}
+
+	/**
 	 * Gets a mock configuration object.
 	 *
 	 * @return  JConfig
@@ -313,19 +333,26 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
 	 */
 	protected function getConnection()
 	{
-		return $this->createDefaultDBConnection(self::$driver->getConnection(), ':memory:');
+		if (!is_null(self::$driver))
+		{
+			return $this->createDefaultDBConnection(self::$driver->getConnection(), ':memory:');
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
 	 * Gets the data set to be loaded into the database during setup
 	 *
-	 * @return  xml dataset
+	 * @return  PHPUnit_Extensions_Database_DataSet_XmlDataSet
 	 *
 	 * @since   11.1
 	 */
 	protected function getDataSet()
 	{
-		return $this->createXMLDataSet(JPATH_TESTS . '/suites/unit/stubs/empty.xml');
+		return $this->createXMLDataSet(JPATH_TESTS . '/stubs/database.xml');
 	}
 
 	/**
@@ -452,10 +479,11 @@ abstract class TestCaseDatabase extends PHPUnit_Extensions_Database_TestCase
 	}
 
 	/**
-	 * Sets the JError error handlers to callback mode and points them at the test
-	 * logging method.
+	 * Sets the JError error handlers to callback mode and points them at the test logging method.
 	 *
-	 * @return	void
+	 * @param   string  $testName  The name of the test class for which to set the error callback method.
+	 *
+	 * @return  void
 	 *
 	 * @since   12.1
 	 */

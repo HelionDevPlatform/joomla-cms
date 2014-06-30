@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  mod_menu
  *
- * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -16,15 +16,16 @@ defined('_JEXEC') or die;
  * @subpackage  mod_menu
  * @since       1.5
  */
-class modMenuHelper
+class ModMenuHelper
 {
 	/**
 	 * Get a list of the menu items.
 	 *
-	 * @param	JRegistry	$params	The module options.
+	 * @param   JRegistry  &$params  The module options.
 	 *
-	 * @return	array
-	 * @since	1.5
+	 * @return  array
+	 *
+	 * @since   1.5
 	 */
 	public static function getList(&$params)
 	{
@@ -32,15 +33,16 @@ class modMenuHelper
 		$menu = $app->getMenu();
 
 		// Get active menu item
-		$active = self::getActive($params);
+		$base = self::getBase($params);
 		$user = JFactory::getUser();
 		$levels = $user->getAuthorisedViewLevels();
 		asort($levels);
-		$key = 'menu_items' . $params . implode(',', $levels) . '.' . $active->id;
+		$key = 'menu_items' . $params . implode(',', $levels) . '.' . $base->id;
 		$cache = JFactory::getCache('mod_menu', '');
+
 		if (!($items = $cache->get($key)))
 		{
-			$path    = $active->tree;
+			$path    = $base->tree;
 			$start   = (int) $params->get('startLevel');
 			$end     = (int) $params->get('endLevel');
 			$showAll = $params->get('showAllChildren');
@@ -50,7 +52,7 @@ class modMenuHelper
 
 			if ($items)
 			{
-				foreach($items as $i => $item)
+				foreach ($items as $i => $item)
 				{
 					if (($start && $start > $item->level)
 						|| ($end && $item->level > $end)
@@ -82,6 +84,7 @@ class modMenuHelper
 					switch ($item->type)
 					{
 						case 'separator':
+						case 'heading':
 							// No further action needed.
 							continue;
 
@@ -99,10 +102,16 @@ class modMenuHelper
 							break;
 
 						default:
-							$router = JSite::getRouter();
+							$router = $app::getRouter();
+
 							if ($router->getMode() == JROUTER_MODE_SEF)
 							{
 								$item->flink = 'index.php?Itemid=' . $item->id;
+
+								if (isset($item->query['format']) && $app->get('sef_suffix'))
+								{
+									$item->flink .= '&format=' . $item->query['format'];
+								}
 							}
 							else
 							{
@@ -125,7 +134,8 @@ class modMenuHelper
 					$item->title        = htmlspecialchars($item->title, ENT_COMPAT, 'UTF-8', false);
 					$item->anchor_css   = htmlspecialchars($item->params->get('menu-anchor_css', ''), ENT_COMPAT, 'UTF-8', false);
 					$item->anchor_title = htmlspecialchars($item->params->get('menu-anchor_title', ''), ENT_COMPAT, 'UTF-8', false);
-					$item->menu_image   = $item->params->get('menu_image', '') ? htmlspecialchars($item->params->get('menu_image', ''), ENT_COMPAT, 'UTF-8', false) : '';
+					$item->menu_image   = $item->params->get('menu_image', '') ?
+						htmlspecialchars($item->params->get('menu_image', ''), ENT_COMPAT, 'UTF-8', false) : '';
 				}
 
 				if (isset($items[$lastitem]))
@@ -138,34 +148,53 @@ class modMenuHelper
 
 			$cache->store($items, $key);
 		}
+
 		return $items;
+	}
+
+	/**
+	 * Get base menu item.
+	 *
+	 * @param   JRegistry  &$params  The module options.
+	 *
+	 * @return   object
+	 *
+	 * @since	3.0.2
+	 */
+	public static function getBase(&$params)
+	{
+		// Get base menu item from parameters
+		if ($params->get('base'))
+		{
+			$base = JFactory::getApplication()->getMenu()->getItem($params->get('base'));
+		}
+		else
+		{
+			$base = false;
+		}
+
+		// Use active menu item if no base found
+		if (!$base)
+		{
+			$base = self::getActive($params);
+		}
+
+		return $base;
 	}
 
 	/**
 	 * Get active menu item.
 	 *
-	 * @param	JRegistry	$params	The module options.
+	 * @param   JRegistry  &$params  The module options.
 	 *
-	 * @return	object
-	 * @since	3.0
+	 * @return  object
+	 *
+	 * @since	3.0.2
 	 */
 	public static function getActive(&$params)
 	{
 		$menu = JFactory::getApplication()->getMenu();
 
-		// Get active menu item from parameters
-		if ($params->get('active')) {
-			$active = $menu->getItem($params->get('active'));
-		} else {
-			$active = false;
-		}
-
-		// If no active menu, use current or default
-		if (!$active) {
-			$active = ($menu->getActive()) ? $menu->getActive() : $menu->getDefault();
-		}
-
-		return $active;
+		return $menu->getActive() ? $menu->getActive() : $menu->getDefault();
 	}
-
 }

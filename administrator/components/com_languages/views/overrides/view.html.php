@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_languages
  *
- * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -45,9 +45,9 @@ class LanguagesViewOverrides extends JViewLegacy
 	/**
 	 * Displays the view
 	 *
-	 * @param		string	$tpl	The name of the template file to parse
+	 * @param   	string	$tpl	The name of the template file to parse
 	 *
-	 * @return	void
+	 * @return  void
 	 *
 	 * @since		2.5
 	 */
@@ -73,16 +73,16 @@ class LanguagesViewOverrides extends JViewLegacy
 	/**
 	 * Adds the page title and toolbar
 	 *
-	 * @return	void
+	 * @return  void
 	 *
 	 * @since		2.5
 	 */
 	protected function addToolbar()
 	{
 		// Get the results for each action
-		$canDo = LanguagesHelper::getActions();
+		$canDo = JHelperContent::getActions('com_languages');
 
-		JToolbarHelper::title(JText::_('COM_LANGUAGES_VIEW_OVERRIDES_TITLE'), 'langmanager');
+		JToolbarHelper::title(JText::_('COM_LANGUAGES_VIEW_OVERRIDES_TITLE'), 'comments-2 langmanager');
 
 		if ($canDo->get('core.create'))
 		{

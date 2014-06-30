@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_admin
  *
- * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -62,13 +62,14 @@ class AdminViewHelp extends JViewLegacy
 		$this->addToolbar();
 		parent::display($tpl);
 	}
+
 	/**
 	 * Setup the Toolbar
 	 *
-	 * @since	1.6
+	 * @since   1.6
 	 */
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::_('COM_ADMIN_HELP'), 'help_header.png');
+		JToolbarHelper::title(JText::_('COM_ADMIN_HELP'), 'support help_header');
 	}
 }

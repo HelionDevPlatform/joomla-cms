@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_modules
  *
- * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -21,13 +21,15 @@ class ModulesModelPositions extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param	array	An optional associative array of configuration settings.
-	 * @see		JController
-	 * @since	1.6
+	 * @param   array  An optional associative array of configuration settings.
+	 *
+	 * @see     JController
+	 * @since   1.6
 	 */
 	public function __construct($config = array())
 	{
-		if (empty($config['filter_fields'])) {
+		if (empty($config['filter_fields']))
+		{
 			$config['filter_fields'] = array(
 				'value',
 				'templates',
@@ -42,26 +44,26 @@ class ModulesModelPositions extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	1.6
+	 * @since   1.6
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = JFactory::getApplication('administrator');
 
 		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state', '', 'string');
+		$state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string');
 		$this->setState('filter.state', $state);
 
 		$clientId = $app->input->getInt('client_id', 0);
 		$this->setState('filter.client_id', $clientId);
 
-		$template = $this->getUserStateFromRequest($this->context.'.filter.template', 'filter_template', '', 'string');
+		$template = $this->getUserStateFromRequest($this->context . '.filter.template', 'filter_template', '', 'string');
 		$this->setState('filter.template', $template);
 
-		$type = $this->getUserStateFromRequest($this->context.'.filter.type', 'filter_type', '', 'string');
+		$type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string');
 		$this->setState('filter.type', $type);
 
 		// Load the parameters.
@@ -75,8 +77,9 @@ class ModulesModelPositions extends JModelList
 	/**
 	 * Method to get an array of data items.
 	 *
-	 * @return	mixed	An array of data items on success, false on failure.
-	 * @since	1.6
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since   1.6
 	 */
 	public function getItems()
 	{
@@ -97,12 +100,13 @@ class ModulesModelPositions extends JModelList
 			if ($type != 'template')
 			{
 				// Get the database object and a new query object.
-				$query	= $this->_db->getQuery(true);
-				$query->select('DISTINCT(position) as value');
-				$query->from('#__modules');
-				$query->where($this->_db->quoteName('client_id').' = '.(int) $clientId);
-				if ($search) {
-					$query->where('position LIKE '.$this->_db->Quote('%'.$this->_db->escape($search, true).'%'));
+				$query	= $this->_db->getQuery(true)
+					->select('DISTINCT(position) as value')
+					->from('#__modules')
+					->where($this->_db->quoteName('client_id') . ' = ' . (int) $clientId);
+				if ($search)
+				{
+					$query->where('position LIKE ' . $this->_db->quote('%' . $this->_db->escape($search, true) . '%'));
 				}
 
 				$this->_db->setQuery($query);
@@ -114,8 +118,10 @@ class ModulesModelPositions extends JModelList
 				catch (RuntimeException $e)
 				{
 					$this->setError($e->getMessage());
+
 					return false;
 				}
+
 				foreach ($positions as $value => $position)
 				{
 					$positions[$value] = array();
@@ -129,26 +135,28 @@ class ModulesModelPositions extends JModelList
 			// Load the positions from the installed templates.
 			foreach (ModulesHelper::getTemplates($clientId) as $template)
 			{
-				$path = JPath::clean($client->path.'/templates/'.$template->element.'/templateDetails.xml');
+				$path = JPath::clean($client->path . '/templates/' . $template->element . '/templateDetails.xml');
 
 				if (file_exists($path))
 				{
 					$xml = simplexml_load_file($path);
 					if (isset($xml->positions[0]))
 					{
-						$lang->load('tpl_'.$template->element.'.sys', $client->path, null, false, false)
-					||	$lang->load('tpl_'.$template->element.'.sys', $client->path.'/templates/'.$template->element, null, false, false)
-					||	$lang->load('tpl_'.$template->element.'.sys', $client->path, $lang->getDefault(), false, false)
-					||	$lang->load('tpl_'.$template->element.'.sys', $client->path.'/templates/'.$template->element, $lang->getDefault(), false, false);
+						$lang->load('tpl_' . $template->element . '.sys', $client->path, null, false, true)
+						|| $lang->load('tpl_' . $template->element . '.sys', $client->path . '/templates/' . $template->element, null, false, true);
 						foreach ($xml->positions[0] as $position)
 						{
 							$value = (string) $position['value'];
 							$label = (string) $position;
-							if (!$value) {
+
+							if (!$value)
+							{
 								$value = $label;
-								$label = preg_replace('/[^a-zA-Z0-9_\-]/', '_', 'TPL_'.$template->element.'_POSITION_'.$value);
-								$altlabel = preg_replace('/[^a-zA-Z0-9_\-]/', '_', 'COM_MODULES_POSITION_'.$value);
-								if (!$lang->hasKey($label) && $lang->hasKey($altlabel)) {
+								$label = preg_replace('/[^a-zA-Z0-9_\-]/', '_', 'TPL_' . $template->element . '_POSITION_' . $value);
+								$altlabel = preg_replace('/[^a-zA-Z0-9_\-]/', '_', 'COM_MODULES_POSITION_' . $value);
+
+								if (!$lang->hasKey($label) && $lang->hasKey($altlabel))
+								{
 									$label = $altlabel;
 								}
 							}
@@ -158,7 +166,8 @@ class ModulesModelPositions extends JModelList
 							}
 							elseif (preg_match(chr(1) . $search . chr(1) . 'i', $value) && ($filter_template == '' || $filter_template == $template->element))
 							{
-								if (!isset($positions[$value])) {
+								if (!isset($positions[$value]))
+								{
 									$positions[$value] = array();
 								}
 								$positions[$value][$template->name] = $label;
@@ -168,36 +177,47 @@ class ModulesModelPositions extends JModelList
 				}
 			}
 			$this->total = count($positions);
-			if ($limitstart >= $this->total) {
+
+			if ($limitstart >= $this->total)
+			{
 				$limitstart = $limitstart < $limit ? 0 : $limitstart - $limit;
 				$this->setState('list.start', $limitstart);
 			}
-			if ($ordering == 'value') {
-				if ($direction == 'asc') {
+
+			if ($ordering == 'value')
+			{
+				if ($direction == 'asc')
+				{
 					ksort($positions);
 				}
-				else {
+				else
+				{
 					krsort($positions);
 				}
 			}
-			else {
-				if ($direction == 'asc') {
+			else
+			{
+				if ($direction == 'asc')
+				{
 					asort($positions);
 				}
-				else {
+				else
+				{
 					arsort($positions);
 				}
 			}
 			$this->items = array_slice($positions, $limitstart, $limit ? $limit : null);
 		}
+
 		return $this->items;
 	}
 
 	/**
 	 * Method to get the total number of items.
 	 *
-	 * @return	int	The total number of items.
-	 * @since	1.6
+	 * @return  int	The total number of items.
+	 *
+	 * @since   1.6
 	 */
 	public function getTotal()
 	{
@@ -205,6 +225,7 @@ class ModulesModelPositions extends JModelList
 		{
 			$this->getItems();
 		}
+
 		return $this->total;
 	}
 }
