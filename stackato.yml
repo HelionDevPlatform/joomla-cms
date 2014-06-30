@@ -8,6 +8,6 @@ services:
   ${name}-db: mysql
 hooks:
   post-staging:
-    # setting up in filesystem
-    - sh stackato-setup.sh
-    - echo $VCAP_SERVICES | json mysql | json -a credentials
+  # setting up in filesystem
+  - sh stackato-setup.sh
+  - echo $VCAP_SERVICES | json mysql | json -a credentials
