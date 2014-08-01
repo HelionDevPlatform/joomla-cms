@@ -1,0 +1,17 @@
+applications:
+- name: joomla-cms
+  framework:
+    name: php
+  instances: 1
+  mem: 128
+  services:
+    ${name}-fs:
+      type: filesystem
+    ${name}-db:
+      type: mysql
+  stackato:
+    hooks:
+      post-staging:
+      # setting up in filesystem
+      - sh stackato-setup.sh
+      - echo $VCAP_SERVICES | json mysql | json -a credentials
