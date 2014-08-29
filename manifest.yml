@@ -1,6 +1,6 @@
 applications:
 - name: joomla-cms
-  buildpack: https://github.com/cyberdelia/heroku-buildpack-php.git
+  buildpack: https://github.com/heroku/heroku-buildpack-php.git
   instances: 1
   mem: 128
   services:
@@ -12,5 +12,8 @@ applications:
     hooks:
       post-staging:
       # setting up in filesystem
-      - sh www/stackato-setup.sh
+      - sh stackato-setup.sh
       - echo $VCAP_SERVICES | json mysql | json -a credentials
+    requirements:
+      ubuntu:
+      - libjpeg62
