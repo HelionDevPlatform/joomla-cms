@@ -14,14 +14,14 @@ else
 fi
 
 echo "Migrating data to shared filesystem..."
-cp -r images/* $FS/images
+cp -r htdocs/images/* $FS/images
 
 echo "Symlink to files in shared filesystem..."
-rm -f configuration.php
-ln -s "$FS"/configuration.php configuration.php
+rm -f htdocs/configuration.php
+ln -s "$FS"/configuration.php htdocs/configuration.php
 
 echo "Symlink to folders in shared filesystem..."
-rm -fr images
-ln -s $FS/images images
+rm -fr htdocs/images
+ln -s $FS/images htdocs/images
 
 echo "All Done!"
