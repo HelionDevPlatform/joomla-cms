@@ -1,5 +1,6 @@
 applications:
 - name: joomla-cms
+  buildpack: https://github.com/cloudfoundry/php-buildpack#v3.1.0
   instances: 1
   mem: 128
   services:
@@ -16,3 +17,4 @@ applications:
     requirements:
       ubuntu:
       - libjpeg62
+  timeout: 180
