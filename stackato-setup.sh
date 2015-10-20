@@ -1,5 +1,5 @@
 #!/bin/bash
-#echo "This scripts does Stackato setup related to filesystem."
+#echo "This scripts does HPE Helion Stackato setup related to filesystem."
 FS=$STACKATO_FILESYSTEM
 if [ -s $FS/configuration.php ]
   then

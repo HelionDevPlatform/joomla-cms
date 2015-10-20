@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-// BEGIN Stackato VCAP Services
+// BEGIN HPE Helion Stackato VCAP Services
 $services = getenv("VCAP_SERVICES");
 $services_json = json_decode($services,true);
 $mysql_config = $services_json["mysql"][0]["credentials"];

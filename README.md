@@ -1,16 +1,14 @@
 Joomla! CMS™ [![Analytics](https://ga-beacon.appspot.com/UA-544070-3/joomla-cms/readme)](https://github.com/igrigorik/ga-beacon)
 ====================
 
-Deploy on Stackato
----------------------
+Deploy on HPE Helion Stackato
+-----------------------------
 
-1. Install the Stackato client.
-2. Clone the source code.
-3. Deploy the application using the following command:
+1. Deploy the application using the following command:
 
         stackato push -n
 
-4. Navigate to the application URL and complete the setup process. The MySQL credentials should shown beside the text fields.
+2. Navigate to the application URL and complete the setup process. The MySQL credentials should be shown beside the text fields.
 
 Build Status
 ---------------------
